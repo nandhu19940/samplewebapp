@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Build Started..."
-                cat index.html
+                sh 'cat index.html'
                 echo "Build Successful!"
             }
         }
