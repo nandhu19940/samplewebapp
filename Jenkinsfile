@@ -6,6 +6,12 @@ pipeline {
                 echo "Pulling latest code from GitHub..."
             }
         }
+        stage('validate') {
+            steps {
+                echo "Validating required file for build exist....."
+                sh ' test -f index.html && echo "index.html file is present" || exit 1'
+            }
+        }
         stage('Build') {
             steps {
                 echo "Build Started..."
