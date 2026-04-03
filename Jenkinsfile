@@ -19,5 +19,12 @@ pipeline {
                 echo "Build Successful!"
             }
         }
+        stage ('archive') {
+            steps {
+                echo "Archiving build artifacts..."
+                archiveArtifacts artifacts: 'index.html', fingerprint: true
+                echo "Artifact archived successfully!"
+            }
+        }
     }
 }
