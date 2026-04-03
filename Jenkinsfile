@@ -27,4 +27,16 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            echo "PIPELINE SUCCEEDED — index.html built and archived successfully!"
+            echo "Build Number: ${env.BUILD_NUMBER}"
+            echo "Job Name: ${env.JOB_NAME}"
+        }
+        failure {
+            echo "PIPELINE FAILED — something went wrong. Check the logs above!"
+            echo "Build Number: ${env.BUILD_NUMBER}"
+            echo "Job Name: ${env.JOB_NAME}"
+        }
+    }
 }
