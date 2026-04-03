@@ -26,17 +26,19 @@ pipeline {
                 echo "Artifact archived successfully!"
             }
         }
+        stage('Deploy') {
+    steps {
+        echo "Deploying artifact to Nginx container"
+        sh "docker cp index.html nginx-server:/usr/share/nginx/html/index.html"
+    }
+}
     }
     post {
         success {
-            echo "PIPELINE SUCCEEDED — index.html built and archived successfully!"
-            echo "Build Number: ${env.BUILD_NUMBER}"
-            echo "Job Name: ${env.JOB_NAME}"
+            echo '✅ Pipeline succeeded! Website is live at http://localhost:8090'
         }
         failure {
-            echo "PIPELINE FAILED — something went wrong. Check the logs above!"
-            echo "Build Number: ${env.BUILD_NUMBER}"
-            echo "Job Name: ${env.JOB_NAME}"
+            echo '❌ Pipeline failed. Check the logs above.'
         }
     }
 }
