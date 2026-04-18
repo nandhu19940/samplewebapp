@@ -49,6 +49,11 @@ pipeline {
 
     }
     post {
+        always {
+            echo "Housekeeping: Cleaning up unused Docker images..."
+            // This prevents your Lenovo laptop disk from filling up
+            sh "docker image prune -f"
+        }
         success {
             echo '✅ Pipeline succeeded! Website is live at http://localhost:8090'
         }
