@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "sample-web-app"
-        CONTAINER_NAME = "nginx-serve"
+        CONTAINER_NAME = "nginx-server-18th-april"
     }
     stages {
         stage('Checkout') {
