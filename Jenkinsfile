@@ -1,8 +1,10 @@
 pipeline {
     agent any
     environment {
+        DOCKERHUB_USERNAME = "magsnan"
         IMAGE_NAME = "sample-web-app"
-        CONTAINER_NAME = "nginx-server-18th-april"
+        CONTAINER_NAME = "nginx-server-19th-april"
+        FULL_IMAGE = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}"
     }
     stages {
         stage('Checkout') {
@@ -34,16 +36,29 @@ pipeline {
                 sh "docker tag ${IMAGE_NAME}:${env.BUILD_ID} ${IMAGE_NAME}:latest"
             }
         }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo "Pushing image to Docker Hub..."
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DH_USER',
+                    passwordVariable: 'DH_PASS'
+                )]) {
+                    sh "echo $DH_PASS | docker login -u $DH_USER --password-stdin"
+                    sh "docker push ${FULL_IMAGE}:${env.BUILD_ID}"
+                    sh "docker push ${FULL_IMAGE}:latest"
+                }
+            }
+        }
+
         
         stage('Deploy') {
             steps {
                 echo "Deploying to Host..."
-                // Stop and remove the old standalone Nginx container
                 sh "docker stop ${CONTAINER_NAME} || true"
                 sh "docker rm ${CONTAINER_NAME} || true"
-
-                // Start the new one
-                sh "docker run -d --name ${CONTAINER_NAME} -p 8090:80 ${IMAGE_NAME}:latest"
+                sh "docker run -d --name ${CONTAINER_NAME} -p 8090:80 ${FULL_IMAGE}:latest"
             }
         }
 
