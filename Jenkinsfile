@@ -32,8 +32,8 @@ pipeline {
             steps {
                 echo "Building Image inside Jenkins Container..."
                 // This command goes through the socket to your Windows Docker Desktop
-                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_ID} ."
-                sh "docker tag ${IMAGE_NAME}:${env.BUILD_ID} ${IMAGE_NAME}:latest"
+                sh "docker build -t ${FULL_IMAGE}:${env.BUILD_ID} ."
+                sh "docker tag ${FULL_IMAGE}:${env.BUILD_ID} ${FULL_IMAGE}:latest"
             }
         }
 
@@ -45,7 +45,7 @@ pipeline {
                     usernameVariable: 'DH_USER',
                     passwordVariable: 'DH_PASS'
                 )]) {
-                    sh "echo $DH_PASS | docker login -u $DH_USER --password-stdin"
+                    sh 'echo $DH_PASS | docker login -u $DH_USER --password-stdin'
                     sh "docker push ${FULL_IMAGE}:${env.BUILD_ID}"
                     sh "docker push ${FULL_IMAGE}:latest"
                 }
